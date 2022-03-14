@@ -1,0 +1,39 @@
+.header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    background-color: #FFFFFF;
+}
+
+.headerLeft {
+    display: flex;
+    align-items: center;
+}
+
+.logo {
+    margin-left: 20px;
+}
+
+.headerLeft__title {
+    font-size: 20px;
+}
+
+.header__search {
+    display: flex;
+    align-items: center;
+    background-color: #eef7f8;
+    padding: 10px;
+    border-radius: 10px;
+    margin-left: 20px;
+}
+
+.header__search > input {
+    border: none;
+    background-color: transparent;
+    outline: none;
+}
+
+.headerRight {
+    display: flex;
+    align-items: center;
+}
