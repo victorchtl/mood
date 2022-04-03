@@ -1,0 +1,12 @@
+export const REGISTER_SUCCESS = "REGISTER_SUCCESS";
+export const REGISTER_FAIL = "REGISTER_FAIL";
+export const LOGIN_SUCCESS = "LOGIN_SUCCESS";
+export const LOGIN_FAIL = "LOGIN_FAIL";
+export const LOGOUT = "LOGOUT";
+export const SET_MESSAGE = "SET_MESSAGE";
+export const CLEAR_MESSAGE = "CLEAR_MESSAGE";
+export const LIKE_MOOD = "LIKE_MOOD";
+export const UNLIKE_MOOD = "UNLIKE_MOOD";
+export const LIKE_SUCCESS = "LIKE_SUCCESS";
+export const LIKE_FAIL = "LIKE_FAIL";
+export const SET_LIKES = "SET_LIKES";
