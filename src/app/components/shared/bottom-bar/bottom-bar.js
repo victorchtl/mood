@@ -23,7 +23,7 @@ import Paper from '@mui/material/Paper';
 import FriendsDrawer from '../friends-drawer/friends-drawer';
 import Drawer from '@mui/material/Drawer';
 import CloseIcon from '@mui/icons-material/Close';
-import FollowingList from '../following-list/following-list';
+import FollowingList from '../user-following/UserFollowing';
 import TopList from '../top-list/top-list';
 
 function BottomBar() {

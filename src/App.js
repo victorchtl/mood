@@ -14,8 +14,15 @@ import { ThemeProvider, createTheme } from '@mui/material/styles';
 import { red } from '@mui/material/colors';
 import PrivateRoutes from './app/components/routes/PrivateRoutes';
 import PublicRoutes from './app/components/routes/PublicRoutes';
-import Profile from './app/components/profile/profile';
+import Profile from './app/components/profile/Profile';
 import User from './app/components/user/User';
+import UserFollowing from './app/components/shared/user-following/UserFollowing';
+import UserFollowers from './app/components/shared/user-followers/UserFollower';
+import UserMoods from './app/components/shared/user-moods/UserMoods';
+import ProfileFollowing from './app/components/profile/profile-following/ProfileFollowing';
+import ProfileFollowers from './app/components/profile/profile-followers/ProfileFollowers';
+import ProfileMoods from './app/components/profile/profile-moods/ProfileMoods';
+import ProfileEdit from './app/components/profile/profile-edit/ProfileEdit';
 
 
 function App() {
@@ -45,8 +52,18 @@ function App() {
           </Route>
           <Route element={<PrivateRoutes />}>
             <Route exact path="/home" element={<Home />} />
-            <Route exact path="/profile" element={<Profile />} />
-            <Route exact path="/user/:id" element={<User id={':id'}/>} />
+
+            <Route element={<Profile />}>
+              <Route exact path="/profile" element={<ProfileMoods />} />
+              <Route exact path="/profile/following" element={<ProfileFollowing />} />
+              <Route exact path="/profile/followers" element={<ProfileFollowers />} />
+            </Route>
+            <Route exact path="/profile/edit" element={<ProfileEdit />} />
+            <Route element={<User id={':id'} />}>
+              <Route exact path="/user/:id" element={<UserMoods id={':id'} />} />
+              <Route exact path="/user/:id/following" element={<UserFollowing id={':id'} />} />
+              <Route exact path="/user/:id/followers" element={<UserFollowers id={':id'} />} />
+            </Route>
           </Route>
           <Route path="" element={<Navigate to="/home" />} />
         </Routes>

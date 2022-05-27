@@ -9,8 +9,11 @@ class LikeDataService {
   create(data) {
     return http.post("/likes", data);
   }
-  update(id, data) {
-    return http.put(`/likes/${id}`, data);
+  dislike(data) {
+    return http.put(`/likes/dislike`, data);
+  }
+  updateLike(data) {
+    return http.put(`/likes/updateLike`, data);
   }
   delete(id) {
     return http.delete(`/likes/${id}`);
@@ -19,10 +22,13 @@ class LikeDataService {
     return http.delete(`/likes`);
   }
   findByMoodId(data) {
-    return http.post(`/likes/byMoodId`, data);
+    return http.post(`/likes/findByMoodId`, data);
   }
-  async findByUserId(data) {
-    return await http.post(`/likes/findByUserId`, data);
+  findByUserId(data) {
+    return http.post(`/likes/findByUserId`, data);
+  }
+  findByUserAndMoodId(data) {
+    return http.post(`/likes/findByUserAndMoodId`, data);
   }
 }
 export default new LikeDataService();

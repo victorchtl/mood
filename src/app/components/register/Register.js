@@ -28,14 +28,13 @@ function Register() {
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
     const [confirmPassword, setConfirmPassword] = useState("");
-    const color = registerProfilImgColors[Math.floor(Math.random() * registerProfilImgColors.length)].color
     const [snackbar, setSnackbar] = useState({ open: false, severity: null, message: null })
     const dispatch = useDispatch();
 
     const handleRegister = (e) => {
         e.preventDefault();
         if (password === confirmPassword) {
-            dispatch(register({ username, email, password, color }))
+            dispatch(register({ username, email, password }))
                 .then(res => {
                     setSnackbar({ ...snackbar, open: true, severity: 'success', message: 'Registration successful ! You can now Login' })
                     setTimeout(() => { navigate("/login", { replace: true }) }, 3000);

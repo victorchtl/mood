@@ -18,8 +18,11 @@ class UserDataService {
   deleteAll() {
     return http.delete(`/users`);
   }
-  findByTitle(title) {
-    return http.get(`/users?title=${title}`);
+  getFollowing(data) {
+    return http.post("/users/findByFollowing", data);
+  }
+  getFollowers(data) {
+    return http.post("/users/findByFollowers", data);
   }
 }
 export default new UserDataService();

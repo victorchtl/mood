@@ -3,14 +3,16 @@ import { Avatar, Grid, Typography } from '@mui/material';
 import Box from '@mui/material/Box';
 import dateFormatService from '../../../services/date-format.service';
 
-function Comment({ username, userImg, message, createdAt }) {
+function Comment({ id, message, createdAt, userId, username, profilImg }) {
   return (
     <div className='comment'>
       <Grid container justifyContent={'left'}
         alignItems={'center'}>
         <Grid item xs={.75} display={'flex'} justifyContent={'center'}
         alignItems={'center'} sx={{display: { xs: 'none', sm: 'flex' }}}>
-          <Avatar sx={{ width: 24, height: 24, bgcolor: userImg }} alt={username} src="/static/images/avatar/2.jpg" />
+          <Avatar sx={{ width: 24, height: 24, bgcolor: profilImg, fontSize: ".8em" }} src="/static/images/avatar/2.jpg" >
+          {username.charAt(0).toUpperCase()}
+          </Avatar>
         </Grid>
         <Grid item xs={.5} sx={{ display: { xs: 'block', sm: 'none' } }}>
         </Grid>
@@ -43,24 +45,3 @@ function Comment({ username, userImg, message, createdAt }) {
 }
 
 export default Comment
-
-{/* <Box
-            sx={{
-              // width: 'fit-object',
-              backgroundColor: '#eeeeee',
-              borderRadius: '10px',
-            }}
-            p={1}
-          >
-            <Box>
-            <Typography variant="body2" color="text.primary">
-              {username}
-            </Typography>
-            <Typography variant="caption" component="h2" color="text.secondary">
-              {dateFormatService.formatDate(createdAt)}
-            </Typography>
-            </Box>
-            <Typography variant="body2" color="text.secondary">
-              {message}
-            </Typography>
-          </Box> */}

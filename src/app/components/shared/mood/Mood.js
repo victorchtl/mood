@@ -24,17 +24,20 @@ import Divider from '@mui/material/Divider';
 import { useDispatch, useSelector } from 'react-redux';
 import Comment from '../comment/Comment';
 import { getLikes, likemood } from '../../../actions/like';
+import UserDataService from '../../../services/user.service';
+import { Link } from 'react-router-dom';
 
-function Mood({ id, message, user, userImg, createdAt }) {
+function Mood({ id, message, username, userId, profilImg, createdAt }) {
 
-  const [comments, setComments] = useState([]);
   const [input, setInput] = useState("");
+  const [comments, setComments] = useState([]);
   const [likes, setLikes] = useState([]);
+  const [userInfos, setUserInfos] = useState({});
+  const [comDisplay, setComDisplay] = useState(false);
 
   const dispatch = useDispatch();
 
   const { user: currentUser } = useSelector((state) => state.auth);
-  const { likes: currentLikes } = useSelector((state) => state.like);
 
 
   useEffect(() => {
@@ -42,13 +45,14 @@ function Mood({ id, message, user, userImg, createdAt }) {
     retrieveLikes();
   }, []);
 
+  const toggleComDisplay = () => {
+    if (comDisplay) {
+      setComDisplay(false)
+    } else setComDisplay(true)
+  }
+
   const postComment = (e) => {
     e.preventDefault();
-    // db.collection("mood").add({
-    //   userId: 'Victor',
-    //   message: input,
-    //   createdAt: firebase.firestore.FieldValue.serverTimestamp()
-    // })
     const data = {
       userId: currentUser.id,
       username: currentUser.username,
@@ -65,7 +69,6 @@ function Mood({ id, message, user, userImg, createdAt }) {
         console.log(e)
       })
     setInput('');
-    console.log(currentLikes)
   }
 
 
@@ -74,11 +77,11 @@ function Mood({ id, message, user, userImg, createdAt }) {
       .then(response =>
         setComments(response.data.comment.map((e) => ({
           id: e.id,
-          user: e.userId,
-          username: e.username,
-          userImg: e.userImg,
           message: e.message,
           createdAt: e.createdAt,
+          userId: e.user.userId,
+          username: e.user.username,
+          profilImg: e.user.profilImg
         })))
       )
       .catch(e => {
@@ -87,7 +90,8 @@ function Mood({ id, message, user, userImg, createdAt }) {
   }
 
   const likemood = (e) => {
-    console.log(currentUser.id, id)
+
+    console.log(likes)
 
     const data = {
       userId: currentUser.id,
@@ -95,65 +99,77 @@ function Mood({ id, message, user, userImg, createdAt }) {
     }
     LikeDataService.create(data)
       .then(response => {
-        
+        retrieveLikes();
+      })
+      .catch(e => {
+        console.log(e)
+      })
+
+
+  }
+
+  const dislikemood = (e) => {
+    console.log(likes[0])
+
+    const data = {
+      userId: currentUser.id,
+      moodId: id
+    }
+    LikeDataService.dislike(data)
+      .then(response => {
+        retrieveLikes();
       })
       .catch(e => {
         console.log(e)
       })
   }
 
-  // const retrieveLikes = () => {
-  //   LikeDataService.findByUserId({ "userId": currentUser.id })
-  //     .then(response =>
-  //       setLikes(response.data.like.map((e) => ({
-  //         id: e.id,
-  //         userId: e.userId,
-  //         moodId: e.moodId,
-  //       })))
-  //     )
-  //     .catch(e => {
-  //       console.log(e);
-  //     });
-  // }
-
-  const retrieveLikes = (e) => {
-    // e.preventDefault();
-    dispatch(getLikes(currentUser.id))
-        .then(() => {
-          
-        })
-        .catch((e) => {
-          console.log(e)
-        });
-       
-  };
+  const retrieveLikes = () => {
+    LikeDataService.findByUserAndMoodId({ "moodId": id, "userId": currentUser.id })
+      .then(response =>
+        setLikes(response.data.like.map((e) => ({
+          id: e.id,
+          userId: e.userId,
+          moodId: e.moodId,
+          isLike: e.isLike
+        })))
+      )
+      .catch(e => {
+        console.log(e);
+      });
+  }
 
   return (
     <div className='mood'>
-      {/* <Typography>
-        {id}
-      </Typography>
-      <h5>{id}</h5>
-      <h5>{user}</h5>
-      <p>{message}</p> */}
-
-      <Card elevation={2} sx={{ borderRadius: '10px' }}>
+      <Card elevation={0} sx={{ borderRadius: '5px' }}>
         <CardHeader
           avatar={
-            <Avatar sx={{ bgcolor: userImg }} aria-label="recipe">
-              {user.charAt(0).toUpperCase()}
+            <Avatar sx={{ bgcolor: profilImg }} aria-label="recipe">
+              {username.charAt(0).toUpperCase()}
             </Avatar>
           }
-          // action={
-          //   currentLikes.like.map(({ id, userId, moodId }) => (
-              
-          //     <IconButton aria-label="settings" onClick={likemood} key={id}>
-          //       <FavoriteIcon color={'primary'}/>
-          //     </IconButton>
-          //   ))
-
-          // }
-          title={user.charAt(0).toUpperCase() + user.slice(1)}
+          action={
+            likes.length > 0 ?
+              likes[0].isLike ?
+                <IconButton aria-label="settings" onClick={dislikemood} key={id}>
+                  <FavoriteIcon color={'primary'} />
+                </IconButton>
+                :
+                <IconButton aria-label="settings" onClick={likemood} key={id}>
+                  <FavoriteBorderOutlinedIcon color={'primary'} />
+                </IconButton>
+              :
+              <IconButton aria-label="settings" onClick={likemood} key={id}>
+                <FavoriteBorderOutlinedIcon color={'primary'} />
+              </IconButton>
+          }
+          title={
+            currentUser.id === userId
+              ?
+              <Link to={{ pathname: "/profile" }}>{username.charAt(0).toUpperCase() + username.slice(1)}</Link>
+              :
+              <Link to={{ pathname: `/user/${userId}`, query: { userId } }}>{username.charAt(0).toUpperCase() + username.slice(1)}</Link>
+          }
           subheader={DateFormatService.formatDate(createdAt)}
         />
         <CardContent >
@@ -167,19 +183,15 @@ function Mood({ id, message, user, userImg, createdAt }) {
           <Grid item xs={12} mr={2} ml={2} textAlign="center">
             <Divider />
           </Grid>
-          {/* <Grid item textAlign="center">
-            {!like && <FavoriteBorderOutlinedIcon sx={{color: '#5555', cursor:'pointer'}} fontSize="medium" onClick={addLike}/>}
-          </Grid>
-          <Grid item xs={12} mr={2} ml={2} textAlign="center">
-            <Divider />
-          </Grid> */}
-          {comments.map(({ id, message, username, userImg, createdAt }) => (
+          {comments.map(({ id, message, createdAt, userId, username, profilImg }) => (
             <Grid item xs={12} key={id} >
               <Comment
+                id={id}
                 message={message}
-                username={username}
-                userImg={userImg}
                 createdAt={createdAt}
+                userId={userId}
+                username={username}
+                profilImg={profilImg}
               />
             </Grid>
           ))}
